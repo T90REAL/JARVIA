@@ -14,19 +14,47 @@
 异步优先 (Async-First): 鉴于工具很可能涉及网络I/O, 设计上应优先支持 async/await。
 """
 
-
-from typing import Any, Optional
-from pydantic import BaseModel, Field
+import traceback
+from typing import Any
 from abc import ABC, abstractmethod
+from pydantic import BaseModel, Field
+from tools.tool_result import ToolResult
 
 
 class BaseTool(BaseModel, ABC):
-    name: str
-    description: str
+	name: str = Field(..., description="The unique name of the tool")
+	description: str = Field(..., description="Clear and brief usage description of the tool")
+	parameters: dict = Field(default_factory=dict, description="JSON Schema definition of the parameters required by the tool",)
 
-    async def __call__(self, **kwargs) -> Any:
-        return await self.execute(**kwargs)
+	@abstractmethod
+	async def _execute(self, **kwargs) -> Any:
+		"""
+		An Abstract method. It is the real core logic that every concrete tool must implement.
+		It receives parsed parameters and performs tasks.
+		"""
+		pass
 
-    @abstractmethod
-    async def execute(self, **kwargs) -> Any:
-        """The implementation of the tool execution."""
+	async def __call__(self, **kwargs) -> ToolResult:
+		"""
+		A convenient method that allows tool instances to be called directly with built-in unified error handling.
+		"""
+		try:
+			result = await self._execute(**kwargs)
+			return ToolResult(output=result)
+		except Exception as e:
+			error_info = f"Tool '{self.name}' failed with error: {e}"
+			print(f"{error_info}\n{traceback.format_exc()}")
+			return ToolResult(error=error_info)
+		
+	def def_to_json(self) -> dict:
+		"""
+		Convert the defnition of the tool to json format (MCP)
+		"""
+		return {
+			"type": "function",
+            "function": {
+                "name": self.name,
+                "description": self.description,
+                "parameters": self.parameters,
+            },
+		}
