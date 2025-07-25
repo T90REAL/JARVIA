@@ -15,10 +15,21 @@
 """
 
 import traceback
-from typing import Any
+from typing import Any, Optional
 from abc import ABC, abstractmethod
 from pydantic import BaseModel, Field
-from tools.tool_result import ToolResult
+
+class ToolResult(BaseModel):
+    """
+    A standard container to contain the execution result
+    """
+    result: Any = Field(default=None, description="The output after executing successfully.")
+    error: Optional[str] = Field(default=None, description="Saves the error message if executing failed")
+
+    def __str__(self):
+        if self.error:
+            return f"Error: {self.error}"
+        return self.result if self.result is not None else "Tool executed successfully with no output."
 
 
 class BaseTool(BaseModel, ABC):
@@ -40,15 +51,15 @@ class BaseTool(BaseModel, ABC):
 		"""
 		try:
 			result = await self._execute(**kwargs)
-			return ToolResult(output=result)
+			return ToolResult(result=result)
 		except Exception as e:
 			error_info = f"Tool '{self.name}' failed with error: {e}"
 			print(f"{error_info}\n{traceback.format_exc()}")
 			return ToolResult(error=error_info)
 		
-	def def_to_json(self) -> dict:
+	def to_llm_format(self) -> dict:
 		"""
-		Convert the defnition of the tool to json format (MCP)
+		Convert the definition of the tool to json format (MCP)
 		"""
 		return {
 			"type": "function",
