@@ -36,8 +36,6 @@ class StatefulAgent(BaseAgent):
             # Record current state
             state_before_execution = self.current_state.name
 
-            print("Current Context: ", context)
-
             # Execute
             next_state_name, context = await self.current_state.execute(self, context)
 
@@ -57,8 +55,6 @@ class StatefulAgent(BaseAgent):
                     else None
                 ),
             )
-
-            print("??? ", step_result)
 
             yield step_result
             # -----------------------------------
