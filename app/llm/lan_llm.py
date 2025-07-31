@@ -1,4 +1,5 @@
 import ollama
+
 from app.llm.base import BaseLLM
 
 class LAN_LLM(BaseLLM):

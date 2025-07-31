@@ -1,8 +1,8 @@
 import re
 import sys
-from abc import ABC, abstractmethod
 import asyncio
 from typing import Optional
+from abc import ABC, abstractmethod
 
 
 class BaseLLM(ABC):
@@ -81,6 +81,10 @@ class BaseLLM(ABC):
             response = await self.client.chat(**chat_options)
             content = response["message"]["content"]
             response_time = response["created_at"]
+
+            print("???", content)
+
+            return "", content, response_time
 
             if "<think>" not in content:
                 # Not a resoning model

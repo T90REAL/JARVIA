@@ -1,9 +1,8 @@
 from typing import AsyncGenerator, Optional
+
 from app.agent.base import BaseAgent
 from app.tools.tool_box import ToolBox
 from app.states.base import AgentState
-from app.states.planning import PlanningState
-from app.states.finished import FinishedState
 from app.states.base import AgentStepResult
 
 
@@ -38,12 +37,7 @@ class StatefulAgent(BaseAgent):
 
             # Execute
             next_state_name, context = await self.current_state.execute(self, context)
-
-            # print(context)
-            # print(context.get("tool_call", {}).get("tool_name"))
-            # print(context.get("tool_call", {}).get("arguments"))
-            # print("??", self.memory[-1]["content"])
-
+            
             # --- Yield current result ---
             step_result = AgentStepResult(
                 current_state=state_before_execution,

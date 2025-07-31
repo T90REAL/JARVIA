@@ -1,4 +1,5 @@
 import json
+
 from app.states.base import AgentState
 from app.prompts.planning import PLANNING_SYSTEM_PROMPT
 
@@ -33,7 +34,9 @@ class PlanningState(AgentState):
         messages = [{"role": "system", "content": formatted_prompt}] + agent.memory
 
         # Calling LLM for decision making
-        _, response_json_str, _ = await agent.llm.chat(messages=messages, format_type="json")
+        _, response_json_str, _ = await agent.llm.chat(
+            messages=messages, format_type="json"
+        )
 
         tool_call_decision = json.loads(response_json_str)
 

@@ -1,7 +1,6 @@
+from typing import Any, Optional
 from abc import ABC, abstractmethod
 from pydantic import BaseModel, Field
-from typing import Any, Optional
-# from app.agent.stateful import StatefulAgent
 
 """
 State workflow:
