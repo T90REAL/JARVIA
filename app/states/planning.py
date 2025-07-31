@@ -32,12 +32,8 @@ class PlanningState(AgentState):
         # Building messages to LLM
         messages = [{"role": "system", "content": formatted_prompt}] + agent.memory
 
-        print("HERE : ", messages , "endl")
-
         # Calling LLM for decision making
         _, response_json_str, _ = await agent.llm.chat(messages=messages, format_type="json")
-
-        print("response!!!!!!!", response_json_str)
 
         tool_call_decision = json.loads(response_json_str)
 
@@ -47,7 +43,6 @@ class PlanningState(AgentState):
         )
 
         tool_name = tool_call_decision.get("tool_name")
-        print(tool_call_decision)
 
         if tool_name == "finish_task":
             return "summarizing", {}

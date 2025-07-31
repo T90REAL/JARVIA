@@ -32,7 +32,7 @@ class GetWeatherTool(BaseTool):
         """
 
         # TODO: Make a display class or method later
-        print(f"--- 正在执行 GetWeatherTool, 查询城市: {city} ---")
+        print(f"--- Running 'GetWeatherTool', Search weather for city: {city} ---")
 
         weather_info = WEATHER_DB.get(city)
 
@@ -40,16 +40,3 @@ class GetWeatherTool(BaseTool):
             return f"{city}'s weather is {weather_info['condition']} and temperature is {weather_info['temperature']}."
         else:
             raise ValueError(f"Can not find the '{city}' weather.")
-
-
-# async def main():
-#     weather_tool = GetWeatherTool()
-
-#     print(weather_tool.to_llm_format)
-
-#     res = await weather_tool(city="Shanghai")
-#     print(f"result = {res}")
-
-
-# if __name__ == "__main__":
-#     asyncio.run(main())
