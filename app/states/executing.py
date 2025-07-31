@@ -45,7 +45,7 @@ class ToolExecutionState(AgentState):
         # This is crucial for the next planning step, as the LLM will see this result.
         agent.memory.append(
             {
-                "role": "tool",
+                "role": "assistant",
                 "content": str(
                     result
                 ),  # Convert result to string to ensure it's serializable
