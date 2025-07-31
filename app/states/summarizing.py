@@ -13,7 +13,7 @@ class SummarizationState(AgentState):
                 "CRITICAL INSTRUCTIONS: "
                 "1. You MUST ONLY use the information provided in the conversation history, especially from the 'assistant' role. "
                 "2. You MUST base your answer ONLY on the text provided in the 'assistant' role. "
-                "3. Your response MUST be a simple, natural language sentence. DO NOT output JSON. "
+                "3. Your response MUST be a simple, natural language sentence. The language should be the same with user's. DO NOT output JSON. "
                 "The original user request was: '{user_request}'"
             ),
         )
